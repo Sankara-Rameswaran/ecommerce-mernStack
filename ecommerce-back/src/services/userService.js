@@ -1,8 +1,14 @@
 import User from "../models/User.js"
 
-export const getAllUsersService =async () =>{
-    const users = await User.find({})
-    return users;
+export const getAllUsersService =async (page,limit,filter,sort,order) =>{
+    const skip  = (page - 1 )* limit 
+    const sortingOrder = order ==="ASCE" ? 1 : -1
+    const totalUsers = await User.countDocuments(filter)
+    const totalPages = Math.ceil(totalUsers / limit)
+    const users = await User.find(filter).sort({[sort]:sortingOrder}).skip(skip).limit(limit)
+    const hasNextPage = page < totalPages
+    const pagination = {totalPages,hasNextPage,currentPage:page,limit}
+    return {users,pagination};
 }
 
 export const getUserByIdService  = async (id) =>{
