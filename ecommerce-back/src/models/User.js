@@ -34,7 +34,26 @@ const UserSchema = new mongoose.Schema({
     },
     phoneNumber:{
         type:String
-    }
+    },
+    cart:[
+        {
+            productId:{
+                type:mongoose.Schema.Types.ObjectId,
+                ref:"Product",
+                required:true
+            },
+            weight:{
+                type:String,
+                enum:["250g","500g","1kg","2kg","5kg"],
+                required:true
+            },
+            quantity:{
+                type:Number,
+                default:1,
+                min:1
+            }        
+        }
+    ]
 },{timestamps:true})
 
 const User = mongoose.model("User",UserSchema)
